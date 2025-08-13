@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Learning Checklist</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Style for completed tasks */
+        .completed span {
+            text-decoration: line-through;
+            color: #9ca3af; /* gray-400 */
+        }
+        /* Custom checkbox style */
+        .task-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            height: 1.25rem;
+            width: 1.25rem;
+            min-width: 1.25rem;
+            background-color: #f3f4f6; /* gray-200 */
+            border-radius: 0.375rem; /* rounded-md */
+            border: 1px solid #d1d5db; /* gray-300 */
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+        }
+        .task-checkbox:checked {
+            background-color: #3b82f6; /* blue-500 */
+            border-color: #3b82f6;
+        }
+        .task-checkbox:checked::after {
+            content: '✔';
+            font-size: 0.8rem;
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        /* Progress bar transition */
+        #progressBar {
+            transition: width 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Main application container -->
+    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-4xl mx-auto my-12">
+
+        <!-- Header -->
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Python Learning Checklist</h1>
+        <p class="text-gray-500 mb-6">Track your progress through the Python curriculum.</p>
+
+        <!-- Progress Bar Section -->
+        <div class="mb-6">
+            <div class="flex justify-between mb-1">
+                <span class="text-base font-medium text-blue-700">Progress</span>
+                <span id="progressText" class="text-sm font-medium text-blue-700">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Task List -->
+        <div id="taskList" class="space-y-6">
+            <!-- Tasks will be dynamically inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Data from the provided markdown table
+        const tasksByTopic = {
+            "Basic Elements": [
+                { text: "Features of Python: Write a short paragraph on why Python is beginner-friendly.", completed: false },
+                { text: "Execution of Python Program: Run a script in both interactive & script mode.", completed: false },
+                { text: "Python Interpreter: Print Python version using `sys.version`.", completed: false },
+                { text: "Comments: Add single-line, multi-line, and docstring comments to a program.", completed: false },
+                { text: "IDLE Usage: Run a small program in IDLE.", completed: false },
+                { text: "Data Types: Create variables of all basic data types and print their types.", completed: false },
+                { text: "Dictionary: Create a dictionary and print all keys & values.", completed: false },
+                { text: "Sets: Create a set and perform union & intersection.", completed: false },
+                { text: "Mapping: Use `map()` to square a list of numbers.", completed: false },
+                { text: "Variables: Swap two variables without a third variable.", completed: false },
+                { text: "Input Function: Take user’s name & age as input and print a greeting.", completed: false },
+                { text: "Output Statements: Use `print()` with formatting to display a table.", completed: false },
+                { text: "Command Line Arguments: Create a program that accepts 2 numbers and prints their sum via CLI.", completed: false },
+                { text: "Operators: Demonstrate all operator types in one program.", completed: false },
+                { text: "Precedence & Associativity: Predict and verify results for `3 + 4 * 2 ** 2`.", completed: false }
+            ],
+            "Control Statements": [
+                { text: "if Statement: Check if a number is positive or negative.", completed: false },
+                { text: "if-else: Find the largest of two numbers.", completed: false },
+                { text: "if-elif-else: Grade calculator based on marks.", completed: false },
+                { text: "while loop: Print numbers from 1 to 10.", completed: false },
+                { text: "for loop: Print multiplication table for a given number.", completed: false },
+                { text: "Infinite loop: Create an infinite loop and break after 5 iterations.", completed: false },
+                { text: "Nested loops: Print a star pyramid pattern.", completed: false },
+                { text: "else with loops: Use `else` in a loop to display a message after completion.", completed: false },
+                { text: "break: Stop printing numbers if a number equals 7.", completed: false },
+                { text: "continue: Skip printing the number 5 in a loop.", completed: false },
+                { text: "pass: Write a loop with a `pass` statement.", completed: false },
+                { text: "assert: Assert that age entered is above 18.", completed: false },
+                { text: "return: Return the sum of two numbers from a function.", completed: false }
+            ],
+            "Arrays": [
+                { text: "Creating Arrays: Create an array of integers using `array` module.", completed: false },
+                { text: "Indexing & Slicing: Access 2nd and last elements, slice first 3 elements.", completed: false },
+                { text: "Basic Operations: Append, remove, and update array elements.", completed: false },
+                { text: "Array Processing: Find max & min in an array.", completed: false },
+                { text: "Math Operations: Add two arrays element-wise.", completed: false },
+                { text: "Aliasing Arrays: Demonstrate aliasing vs copying arrays.", completed: false },
+                { text: "NumPy Arrays – Creation: Create a NumPy array from a list.", completed: false },
+                { text: "NumPy Slicing: Slice every alternate element from a NumPy array.", completed: false },
+                { text: "NumPy Advanced Indexing: Select elements greater than 10 from a NumPy array.", completed: false },
+                { text: "NumPy Dimensions & Attributes: Print `shape` and `ndim` of a NumPy array.", completed: false }
+            ],
+            "Functions": [
+                { text: "Defining & Calling: Create a function that prints a greeting.", completed: false },
+                { text: "Returning Results: Function that returns the square of a number.", completed: false },
+                { text: "Multiple Return Values: Return sum, difference, product of two numbers.", completed: false },
+                { text: "Built-in Functions: Use `len()`, `max()`, `min()` in a program.", completed: false },
+                { text: "Function vs Method: Show example of list method `.append()` vs `len()` function.", completed: false },
+                { text: "Pass by Object Reference: Modify a list inside a function and observe changes.", completed: false },
+                { text: "Parameters & Arguments: Demonstrate positional, keyword, and default arguments.", completed: false },
+                { text: "Recursive Functions: Calculate factorial using recursion.", completed: false },
+                { text: "Lambda Functions: Sort a list of tuples by second element using lambda.", completed: false },
+                { text: "Modules: Create and import your own module.", completed: false }
+            ],
+            "Strings": [
+                { text: "Creating Strings: Create single, double, and triple-quoted strings.", completed: false },
+                { text: "String Functions: Use `.upper()`, `.lower()`, `.replace()`, `.find()`.", completed: false },
+                { text: "String Operations: Concatenate and repeat strings.", completed: false },
+                { text: "Formatting Strings: Use f-strings to display formatted output.", completed: false },
+                { text: "Count Characters & Words: Count characters and words in a sentence.", completed: false },
+                { text: "Insert Substring: Insert “Python” in the middle of a given string.", completed: false }
+            ],
+            "Lists, Tuples & Dictionaries": [
+                { text: "Lists – Basics: Create a list of 10 numbers and print it.", completed: false },
+                { text: "List Functions & Methods: Use `.append()`, `.insert()`, `.remove()`, `.sort()`.", completed: false },
+                { text: "List Operations: Concatenate two lists and repeat them twice.", completed: false },
+                { text: "List Slices: Slice the first 3 and last 2 elements of a list.", completed: false },
+                { text: "Nested Lists: Create a nested list and access an inner element.", completed: false },
+                { text: "Tuples: Create a tuple and try modifying it (observe error).", completed: false },
+                { text: "Functions in Tuple: Use `len()`, `max()`, `min()` on a tuple.", completed: false },
+                { text: "Creating Dictionary: Create a dictionary with student names & marks.", completed: false },
+                { text: "Operators in Dictionary: Check if a key exists using `in` operator.", completed: false },
+                { text: "Dictionary Methods: Use `.keys()`, `.values()`, `.items()`, `.get()`.", completed: false },
+                { text: "Loop with Dictionary: Loop through dictionary and print key-value pairs.", completed: false },
+                { text: "Dictionary Operations: Add, update, and delete dictionary entries.", completed: false }
+            ],
+            "Files in Python": [
+                { text: "Opening & Closing Files: Open a file, write some text, and close it.", completed: false },
+                { text: "Working with Text Files: Read contents of a `.txt` file line by line.", completed: false },
+                { text: "Working with Binary Files: Write and read binary data (e.g., image).", completed: false },
+                { text: "`with` Statement: Open a file using `with` and write text.", completed: false },
+                { text: "Pickle in Python: Serialize and deserialize a Python object.", completed: false },
+                { text: "`seek()` and `tell()`: Move file pointer to specific location and read.", completed: false },
+                { text: "Random Access in Binary Files: Access a specific record in a binary file.", completed: false },
+                { text: "Zipping Files: Zip two text files into one `.zip` file.", completed: false },
+                { text: "Unzipping Files: Extract files from a `.zip` archive.", completed: false },
+                { text: "Working with Directories: List all files in a directory using `os` module.", completed: false }
+            ],
+            "Regular Expressions": [
+                { text: "Introduction: Write a regex to match email addresses.", completed: false },
+                { text: "Sequence Characters: Use `\\d`, `\\w`, and `\\s` in a regex.", completed: false },
+                { text: "Special Characters: Use `^`, `$`, `*`, `+`, `{}` in a regex pattern.", completed: false },
+                { text: "Regex on Files: Extract phone numbers from a `.txt` file.", completed: false },
+                { text: "Regex on HTML: Extract all `<a>` tag links from an HTML file.", completed: false }
+            ],
+            "Date & Time in Python": [
+                { text: "Time Module: Print current system time.", completed: false },
+                { text: "Date Module: Print today’s date.", completed: false },
+                { text: "Date & Time Now: Display current date and time using `datetime.now()`.", completed: false },
+                { text: "Combining Date & Time: Merge a date and a time object into one.", completed: false },
+                { text: "Formatting Date & Time: Format date in `DD-MM-YYYY` style.", completed: false },
+                { text: "Comparing Dates: Check if a given date is before today.", completed: false },
+                { text: "Sorting Dates: Sort a list of dates in ascending order.", completed: false },
+                { text: "Time Taken by Program: Measure execution time of a loop using `time()` or `perf_counter()`.", completed: false },
+                { text: "Calendar Module: Print the calendar of a given month and year.", completed: false }
+            ]
+        };
+
+        // DOM elements
+        const taskListContainer = document.getElementById('taskList');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+
+        let totalTasks = 0;
+        let tasks = [];
+
+        /**
+         * Renders all tasks to the DOM, grouped by topic.
+         */
+        function renderTasks() {
+            // Clear existing tasks
+            taskListContainer.innerHTML = '';
+            tasks = [];
+            let taskIndex = 0;
+
+            // Iterate over each topic
+            for (const topic in tasksByTopic) {
+                // Create a container for the topic
+                const topicContainer = document.createElement('div');
+
+                // Create and append the topic title
+                const topicTitle = document.createElement('h2');
+                topicTitle.className = 'text-xl font-semibold text-gray-700 mb-3 border-b pb-2';
+                topicTitle.textContent = topic;
+                topicContainer.appendChild(topicTitle);
+                
+                const taskItemsContainer = document.createElement('div');
+                taskItemsContainer.className = 'space-y-3';
+                topicContainer.appendChild(taskItemsContainer);
+
+                // Iterate over tasks within the topic
+                tasksByTopic[topic].forEach(taskData => {
+                    const task = { ...taskData, id: taskIndex++ };
+                    tasks.push(task);
+
+                    const li = document.createElement('label');
+                    li.className = 'flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer';
+                    if (task.completed) {
+                        li.classList.add('completed');
+                    }
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = task.completed;
+                    checkbox.dataset.taskId = task.id;
+                    checkbox.className = 'task-checkbox mr-4';
+                    
+                    const span = document.createElement('span');
+                    span.textContent = task.text;
+                    span.className = 'text-gray-800';
+
+                    li.appendChild(checkbox);
+                    li.appendChild(span);
+                    taskItemsContainer.appendChild(li);
+                });
+                
+                taskListContainer.appendChild(topicContainer);
+            }
+            totalTasks = tasks.length;
+            updateProgress();
+        }
+
+        /**
+         * Updates the progress bar and text based on completed tasks.
+         */
+        function updateProgress() {
+            const completedTasks = tasks.filter(task => task.completed).length;
+            const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+            progressBar.style.width = `${percentage}%`;
+            progressText.textContent = `${percentage}%`;
+        }
+
+        /**
+         * Handles the click event on a checkbox to toggle task completion.
+         * @param {Event} e - The event object.
+         */
+        function handleTaskToggle(e) {
+            if (e.target.matches('.task-checkbox')) {
+                const taskId = parseInt(e.target.dataset.taskId, 10);
+                const task = tasks.find(t => t.id === taskId);
+
+                if (task) {
+                    task.completed = !task.completed;
+                    const label = e.target.closest('label');
+                    label.classList.toggle('completed', task.completed);
+                    updateProgress();
+                }
+            }
+        }
+
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTasks();
+            taskListContainer.addEventListener('click', handleTaskToggle);
+        });
+    </script>
+</body>
+</html>
